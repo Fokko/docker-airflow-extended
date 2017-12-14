@@ -1,4 +1,4 @@
-FROM puckel/docker-airflow
+FROM puckel/docker-airflow:1.8.2
 
 USER root
 
@@ -12,8 +12,8 @@ RUN update-ca-certificates -f \
     libopenblas-base \
   && apt-get clean
 
-  # Java
-  RUN cd /opt/ \
+# Java
+RUN cd /opt/ \
     && wget \
       --no-cookies \
       --no-check-certificate \
@@ -26,18 +26,20 @@ RUN update-ca-certificates -f \
     && update-alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_151/bin/jar 100 \
     && update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_151/bin/javac 100
 
-  # SPARK
-  RUN cd /usr/ \
+# SPARK
+RUN cd /usr/ \
     && wget "http://apache.mirrors.spacedump.net/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz" \
     && tar xzf spark-2.2.0-bin-hadoop2.7.tgz \
     && rm spark-2.2.0-bin-hadoop2.7.tgz \
     && mv spark-2.2.0-bin-hadoop2.7 spark
 
-  ENV SPARK_HOME /usr/spark
-  ENV SPARK_MAJOR_VERSION 2
-  ENV PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$SPARK_HOME/python/:$PYTHONPATH
+ENV SPARK_HOME /usr/spark
+ENV SPARK_MAJOR_VERSION 2
+ENV PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$SPARK_HOME/python/:$PYTHONPATH
 
-  RUN mkdir -p /usr/spark/work/ \
+RUN mkdir -p /usr/spark/work/ \
     && chmod -R 777 /usr/spark/work/
 
-  ENV SPARK_MASTER_PORT 7077
+ENV SPARK_MASTER_PORT 7077
+
+USER airflow
