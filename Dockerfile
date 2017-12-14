@@ -1,4 +1,4 @@
-FROM puckel/docker-airflow:1.8.2
+FROM puckel/docker-airflow
 
 USER root
 
@@ -34,6 +34,7 @@ RUN cd /usr/ \
     && mv spark-2.2.0-bin-hadoop2.7 spark
 
 ENV SPARK_HOME /usr/spark
+ENV PATH="/usr/spark/bin:${PATH}"
 ENV SPARK_MAJOR_VERSION 2
 ENV PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$SPARK_HOME/python/:$PYTHONPATH
 
